@@ -892,13 +892,7 @@ function reusableScatterplot() {
        if (showLabels) {
             labelsGroup.selectAll(`.point-label[data-id="${pointId}"]`)
                 .transition("label-hover-style").duration(50)
-                .attr("font-weight", isHovered ? "bold" : "normal")
-                .attr("opacity", isHovered ? 1 : function() {
-                    // Restore opacity considering global highlight and collision detection
-                    const isGloballyHighlighted = !currentHighlightSet || currentHighlightSet.has(pointId);
-                    // Note: This doesn't re-run collision, assumes label was visible before hover
-                    return isGloballyHighlighted ? 1 : 0; // Simplified restoration
-                });
+                .attr("font-weight", isHovered ? "bold" : "normal");
         }
   }
 
