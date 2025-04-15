@@ -121,7 +121,7 @@
     //track how long it takes to load the data
     const startTime = performance.now();
     // temporary for github pages
-    const csvLocation = 'arcprize-leaderboard-prototype/data/leaderboard.csv';
+    const csvLocation = 'data/leaderboard.csv';
     const data = await loadData(csvLocation);
     console.log("DATA", data);
     const filteredData = filterData(data);
