@@ -120,7 +120,8 @@
   document.addEventListener('DOMContentLoaded', async function() {
     //track how long it takes to load the data
     const startTime = performance.now();
-    const csvLocation = 'data/leaderboard.csv';
+    // temporary for github pages
+    const csvLocation = 'arcprize-leaderboard-prototype/data/leaderboard.csv';
     const data = await loadData(csvLocation);
     console.log("DATA", data);
     const filteredData = filterData(data);
