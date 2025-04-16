@@ -72,6 +72,22 @@
     "display": true
   },
   {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "Claude 3.7",
+    "score": 0,
+    "costPerTask": 0.12,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Claude 3.7",
+    "score": 0,
+    "costPerTask": 0.12,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
     "datasetId": "v1_Semi_Private",
     "modelId": "Claude 3.7 Thinking 16K",
     "score": 0.286,
@@ -128,10 +144,26 @@
     "display": true
   },
   {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "Claude 3.7 Thinking 8K",
+    "score": 0,
+    "costPerTask": 0.36,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
     "datasetId": "v2_Semi_Private",
     "modelId": "Claude 3.7 Thinking 8K",
     "score": 0.009,
     "costPerTask": 0.36,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "Gemini 1.5 Pro",
+    "score": 0,
+    "costPerTask": 0.04,
     "resultsUrl": "",
     "display": true
   },
@@ -160,6 +192,14 @@
     "display": true
   },
   {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "gpt-4.5-preview-2025-02-27",
+    "score": 0,
+    "costPerTask": 2.07,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
     "datasetId": "v2_Semi_Private",
     "modelId": "gpt-4.5-preview-2025-02-27",
     "score": 0.008,
@@ -172,6 +212,38 @@
     "modelId": "gpt-4o-2024-11-20",
     "score": 0.045,
     "costPerTask": 0.05,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "gpt-4o-2024-11-20",
+    "score": 0,
+    "costPerTask": 0.08,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "gpt-4o-2024-11-20",
+    "score": 0,
+    "costPerTask": 0.08,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "gpt-4o-mini-2024-07-18",
+    "score": 0,
+    "costPerTask": 0.01,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "gpt-4o-mini-2024-07-18",
+    "score": 0,
+    "costPerTask": 0.01,
     "resultsUrl": "",
     "display": true
   },
@@ -224,6 +296,14 @@
     "display": true
   },
   {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "o1 - high",
+    "score": 0,
+    "costPerTask": 4.85,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
     "datasetId": "v2_Semi_Private",
     "modelId": "o1 - high",
     "score": 0.03,
@@ -240,6 +320,14 @@
     "display": true
   },
   {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "o1 - low",
+    "score": 0,
+    "costPerTask": 1.48,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
     "datasetId": "v2_Semi_Private",
     "modelId": "o1 - low",
     "score": 0.008,
@@ -252,6 +340,14 @@
     "modelId": "o1 - medium",
     "score": 0.31,
     "costPerTask": 2.5,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "o1 - medium",
+    "score": 0,
+    "costPerTask": 2.7,
     "resultsUrl": "",
     "display": true
   },
@@ -328,6 +424,14 @@
     "display": true
   },
   {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "o3-mini-high",
+    "score": 0,
+    "costPerTask": 0.49,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
     "datasetId": "v2_Semi_Private",
     "modelId": "o3-mini-high",
     "score": 0.015,
@@ -344,6 +448,14 @@
     "display": true
   },
   {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "o3-mini-medium",
+    "score": 0,
+    "costPerTask": 0.28,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
     "datasetId": "v2_Semi_Private",
     "modelId": "o3-mini-medium",
     "score": 0.017,
@@ -356,6 +468,22 @@
     "modelId": "o3-mini-low",
     "score": 0.11,
     "costPerTask": 0.04,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "o3-mini-low",
+    "score": 0,
+    "costPerTask": 0.06,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o3-mini-low",
+    "score": 0,
+    "costPerTask": 0.06,
     "resultsUrl": "",
     "display": true
   },
@@ -440,6 +568,22 @@
     "display": true
   },
   {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "Llama-4-Maverick-17B-128E-Instruct-FP8-together",
+    "score": 0,
+    "costPerTask": 0.0126,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Llama-4-Maverick-17B-128E-Instruct-FP8-together",
+    "score": 0,
+    "costPerTask": 0.0121,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
     "datasetId": "v1_Semi_Private",
     "modelId": "Llama-4-Scout-17B-16E-Instruct-together",
     "score": 0.005,
@@ -452,6 +596,118 @@
     "modelId": "Llama-4-Scout-17B-16E-Instruct-together",
     "score": 0.0238,
     "costPerTask": 0.0036,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "Llama-4-Scout-17B-16E-Instruct-together",
+    "score": 0,
+    "costPerTask": 0.006,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Llama-4-Scout-17B-16E-Instruct-together",
+    "score": 0,
+    "costPerTask": 0.0062,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "gpt-4-1-nano-2025-04-14",
+    "score": 0,
+    "costPerTask": 0.0021,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Public_Eval",
+    "modelId": "gpt-4-1-nano-2025-04-14",
+    "score": 0.0175,
+    "costPerTask": 0.0018,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "gpt-4-1-nano-2025-04-14",
+    "score": 0,
+    "costPerTask": 0.0036,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "gpt-4-1-nano-2025-04-14",
+    "score": 0,
+    "costPerTask": 0.0036,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "gpt-4-1-mini-2025-04-14",
+    "score": 0.035,
+    "costPerTask": 0.0078,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Public_Eval",
+    "modelId": "gpt-4-1-mini-2025-04-14",
+    "score": 0.0725,
+    "costPerTask": 0.0066,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "gpt-4-1-mini-2025-04-14",
+    "score": 0,
+    "costPerTask": 0.0136,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "gpt-4-1-mini-2025-04-14",
+    "score": 0,
+    "costPerTask": 0.0139,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "gpt-4-1-2025-04-14",
+    "score": 0.055,
+    "costPerTask": 0.039,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Public_Eval",
+    "modelId": "gpt-4-1-2025-04-14",
+    "score": 0.1175,
+    "costPerTask": 0.032,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "gpt-4-1-2025-04-14",
+    "score": 0,
+    "costPerTask": 0.069,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "gpt-4-1-2025-04-14",
+    "score": 0.0042,
+    "costPerTask": 0.0691,
     "resultsUrl": "",
     "display": true
   }

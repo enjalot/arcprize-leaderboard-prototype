@@ -1,4 +1,11 @@
 // Global variables for data
+let versions = ['v1_Semi_Private', 'v2_Semi_Private'];
+// let versions = ['v1_Public_Eval', 'v2_Public_Eval'];
+// let versions = ['v1_Private_Eval', 'v2_Private_Eval'];
+let modelGroups = {
+"v1_Semi_Private": ["o3", "Claude_3_7_thinking", "o3-mini", "o1", "gpt-4.1"],
+"v2_Semi_Private": ["o3", "Claude_3_7_thinking", "o3-mini", "o1", "gpt-4.1"]
+}
 let datasets = [];
 let models = [];
 let providers = [];
@@ -27,7 +34,7 @@ async function loadAllData() {
     models = modelsData;
     providers = providersData;
     evaluations = evaluationsData.filter(d => {
-      return d.costPerTask > 0 && d.score > 0 && d.display
+      return versions.includes(d.datasetId)
     });
     
     // Create object versions with id as key
@@ -49,21 +56,4 @@ function createObjectById(array) {
     obj[item.id] = item;
     return obj;
   }, {});
-}
-
-// Legacy function for backward compatibility
-async function loadData(csvLocation) {
-  console.warn("loadData is deprecated. Use loadAllData instead.");
-  return await d3.csv(csvLocation, d3.autoType);
-}
-
-// These functions are maintained for compatibility but now just return the data directly
-function filterData(data) {
-  console.warn("filterData is deprecated. Data is now pre-filtered in evaluations.json");
-  return data;
-}
-
-function tidyData(data) {
-  console.warn("tidyData is deprecated. Data is now pre-tidied in evaluations.json");
-  return evaluations;
 }

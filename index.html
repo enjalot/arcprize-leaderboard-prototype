@@ -72,16 +72,34 @@
     
     <div class="filters-wrapper">
       <div class="filters-column">
-        <div class="filter-section-title">Click to highlight</div>
+        <div class="filter-section-title">Click to filter:</div>
         <!-- Prize Filter-->
         <div id="prize-filter" class="filter-container"></div>
         <!-- Provider Filter -->
+        <div class="filter-section-title">Model provider:</div>
         <div id="provider-filter" class="filter-container"></div>
         <!-- Type Filter -->
+        <div class="filter-section-title">Model type:</div>
         <div id="type-filter" class="filter-container"></div>
+        <!-- Add this right after the filter-section-title div -->
+        
       </div>
       <div class="filters-column">
-        <div class="filter-info">Only systems which required less than $10,000 to run are shown. Notably missing from this chart is o3 (high compute). For more information on this see our <a style="color: #707070;" href="/blog/oai-o3-pub-breakthrough">announcement blog post</a>.</div>
+        <div class="filter-section-title">Color points by</div>
+        <div id="color-mode-filter" class="filter-container">
+          <div id="color-by-provider" class="filter-item filter-active" data-mode="provider">
+            <span class="filter-label">Provider</span>
+          </div>
+          <div id="color-by-version" class="filter-item" data-mode="version">
+            <span class="filter-label">Version</span>
+          </div>
+          <div id="color-by-type" class="filter-item" data-mode="type">
+            <span class="filter-label">Type</span>
+          </div>
+        </div>
+        <div class="filter-info">
+          <br/>
+          Only systems which required less than $10,000 to run are shown. Notably missing from this chart is o3 (high compute). For more information on this see our <a style="color: #707070;" href="/blog/oai-o3-pub-breakthrough">announcement blog post</a>.</div>
       </div>
     </div>
   </div>
@@ -153,6 +171,36 @@
 <script>
   // Declare scatterplot in a broader scope
   let scatterplot;
+  // --- Setup Filter State Management ---
+  const filterState = {
+    version: "all",
+    // version: versions[1], // uncomment if you want to default to v2
+    providers: [],
+    modelTypes: [],
+    colorMode: "provider" // Default to color by provider
+  };
+  
+  // Add color mapping for versions and types
+  const colorMappings = {
+    provider: {
+      "OpenAI": "#1e93ffff",
+      "Google": "#4ecc30ff",
+      "Anthropic": "#f93c32ff",
+      "Meta": "#e43ba2ff",
+      "ARC Prize 2024": "#ff841cff",
+      "Human": "#a9a9a9ff",
+      "Other": "#ffdc00ff"
+    },
+    version: {}, 
+    type: {
+      "Base LLM": "#1e93ffff",
+      "CoT": "#4ecc30ff",
+      "CoT + Synthesis": "#f93c32ff",
+      "Custom": "#ff841cff",
+    }
+  };
+  colorMappings.version[versions[0]] = "#1e93ffff";
+  colorMappings.version[versions[1]] = "#f93c32ff";
 
   document.addEventListener('DOMContentLoaded', async function() {
     const startTime = performance.now();
@@ -163,36 +211,27 @@
 
     // --- Instantiate the reusable chart ---
     scatterplot = reusableScatterplot()
-      .modelGroups({
-        "v1_Semi_Private": ["o3", "Claude_3_7_thinking", "o3-mini", "o1"]
-      })
       .width(980)
       .height(500)
       .xAxisMin(0.001)
       .xAxisMax(1000)
       .yAxisMin(0)
       .yAxisMax(100)
+      .setColorMapping(colorMappings[filterState.colorMode], filterState.colorMode);
 
     // --- Select the container and call the chart function ---
     d3.select('#reusable-scatterplot-container')
-      .datum(tidiedData)
+      .datum(tidiedData.filter(d => d.display))
       .call(scatterplot);
 
     // --- Create the leaderboard table ---
-    // createLeaderboardTable('leaderboard-table', csvLocation, {
-    //   sortBy: 'performance',
-    //   sortDirection: 'desc'
-    // });
+    createLeaderboardTable('leaderboard-table');
 
-    // --- Setup Filter State Management ---
-    const filterState = {
-      version: "all",
-      providers: []
-    };
+    
 
     // Function to apply filters based on current state
     function applyFilters() {
-      let filteredPoints = tidiedData;
+      let filteredPoints = tidiedData.filter(d => d.display);
       
       if (filterState.version !== "all") {
         filteredPoints = filteredPoints.filter(d => 
@@ -204,6 +243,12 @@
       if (filterState.providers.length > 0) {
         filteredPoints = filteredPoints.filter(d => 
           filterState.providers.includes(providersById[modelsById[d.modelId].providerId].displayName)
+        );
+      }
+      
+      if (filterState.modelTypes.length > 0) {
+        filteredPoints = filteredPoints.filter(d => 
+          filterState.modelTypes.includes(modelsById[d.modelId].modelType)
         );
       }
       
@@ -236,8 +281,8 @@
       },
       {
         id: "arc-agi-1-filter",
-        text: "ARC-AGI-1",
-        version: "v1_Semi_Private",
+        text: datasetsById[versions[0]].displayName,
+        version: versions[0],
         icon: (svg) => {
           svg.append("circle")
             .attr("cx", 10)
@@ -248,8 +293,8 @@
       },
       {
         id: "arc-agi-2-filter",
-        text: "ARC-AGI-2",
-        version: "v2_Semi_Private",
+        text: datasetsById[versions[1]].displayName,
+        version: versions[1],
         icon: (svg) => {
           svg.append("polygon")
             .attr("points", "10,2 18,18 2,18")
@@ -292,7 +337,7 @@
       .text(d => d.text);
     
     // Set the default active filter (All)
-    d3.select("#all-version-filter").classed("filter-active", true);
+    // d3.select("#all-version-filter").classed("filter-active", true);
 
     // --- Provider Filters ---
     // Extract unique providers from the models data rather than directly from data points
@@ -354,7 +399,143 @@
       .attr("class", "filter-label")
       .text(d => d.provider);
 
+    // --- Type Filters ---
+    // Extract unique model types from the models data
+    const uniqueModelTypes = [...new Set(
+      tidiedData.map(d => modelsById[d.modelId].modelType)
+        .filter(type => type !== null)
+    )];
+
+    // Create type filter data
+    const typeFilters = uniqueModelTypes.sort().map(type => ({
+      id: `type-filter-${type.replace(/\s+/g, '-').toLowerCase()}`,
+      type: type,
+      color: "#808080" // You can assign specific colors if needed
+    }));
+
+    // Create type filters using D3
+    const typeFilterItems = d3.select("#type-filter")
+      .selectAll("div")
+      .data(typeFilters)
+      .enter()
+      .append("div")
+        .attr("id", d => d.id)
+        .attr("class", "filter-item")
+        .attr("data-type", d => d.type)
+        .on("click", function(event, d) {
+          const isSelected = filterState.modelTypes.includes(d.type);
+          
+          if (isSelected) {
+            // Remove from filter
+            filterState.modelTypes = filterState.modelTypes.filter(t => t !== d.type);
+            d3.select(this).classed("filter-active", false);
+          } else {
+            // Add to filter
+            filterState.modelTypes.push(d.type);
+            d3.select(this).classed("filter-active", true);
+          }
+          
+          applyFilters();
+        });
+
+    // Add SVG icons for model types
+    typeFilterItems.append("svg")
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("class", "filter-icon")
+      .each(function(d) {
+        const svg = d3.select(this);
+        
+        // Add background square
+        svg.append("rect")
+          .attr("x", 2)
+          .attr("y", 2)
+          .attr("width", 16)
+          .attr("height", 16)
+          .attr("rx", 3)
+          .attr("fill", d.color);
+        
+        // Add stylized "T"
+        svg.append("path")
+          .attr("d", "M6,6 H14 V8 H11 V14 H9 V8 H6 Z")
+          .attr("fill", "white");
+      });
+
+    // Add text labels
+    typeFilterItems.append("span")
+      .attr("class", "filter-label")
+      .text(d => d.type);
+
+    // After creating the scatterplot, set the initial color mapping
+    
+    // Add color mode filter handlers
+    const colorModeFilter = d3.select("#color-mode-filter")
+      .selectAll(".filter-item")
+      .on("click", function() {
+        // Update UI
+        d3.selectAll("#color-mode-filter .filter-item").classed("filter-active", false);
+        d3.select(this).classed("filter-active", true);
+        
+        // Get the selected color mode from data attribute
+        const newColorMode = d3.select(this).attr("data-mode");
+        
+        // Update state
+        filterState.colorMode = newColorMode;
+        
+        // Update the scatterplot's color mapping
+        scatterplot.setColorMapping(colorMappings[newColorMode], newColorMode);
+        
+        // Apply filters (uses updated color mapping)
+        applyFilters();
+        
+        // Update the filter sections to reflect the new color scheme
+        updateFilterColors();
+      });
+      
+    // Function to update filter section colors based on selected color mode
+    function updateFilterColors() {
+      // Update provider filter colors if they exist
+      if (filterState.colorMode === "provider") {
+        d3.selectAll("#provider-filter .filter-item svg rect")
+          .attr("fill", d => colorMappings.provider[d.provider] || "#ffdc00ff");
+      } else {
+        // Reset provider colors to default when not in provider mode
+        d3.selectAll("#provider-filter .filter-item svg rect")
+          .attr("fill", "#808080");
+      }
+      
+      // Update type filter colors if they exist
+      if (filterState.colorMode === "type") {
+        d3.selectAll("#type-filter .filter-item svg rect")
+          .attr("fill", d => colorMappings.type[d.type] || "#808080");
+      } else {
+        // Reset type colors to default when not in type mode
+        d3.selectAll("#type-filter .filter-item svg rect")
+          .attr("fill", "#808080");
+      }
+      
+      // Update version filter colors if they exist
+      if (filterState.colorMode === "version") {
+        // For versions, we need to update the relevant shapes
+        d3.select("#arc-agi-1-filter svg circle")
+          .attr("fill", colorMappings.version[versions[0]]);
+          
+        d3.select("#arc-agi-2-filter svg polygon")
+          .attr("fill", colorMappings.version[versions[1]]);
+      } else {
+        // Reset version colors to default when not in version mode
+        d3.select("#arc-agi-1-filter svg circle").attr("fill", "#808080");
+        d3.select("#arc-agi-2-filter svg polygon").attr("fill", "#808080");
+      }
+    }
+    
+    // Initial color update
+    updateFilterColors();
+
     const endTime = performance.now();
     const loadTime = endTime - startTime;
+    setTimeout(() => {
+      applyFilters()
+    }, 10)
   });
 </script>

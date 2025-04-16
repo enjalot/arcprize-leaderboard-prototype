@@ -328,5 +328,38 @@
     "paperUrl": "https://www.llama.com/docs/model-cards-and-prompt-formats/llama4_omni/",
     "codeUrl": "https://github.com/arcprize/model_baseline",
     "dataUrl": null
+  },
+  {
+    "id": "gpt-4-1-nano-2025-04-14",
+    "displayName": "GPT-4.1-Nano",
+    "modelReleaseDate": "2025-04-14T00:00:00.000Z",
+    "providerId": "OpenAI",
+    "modelType": "Base LLM",
+    "modelGroup": "gpt-4.1",
+    "paperUrl": "https://openai.com/index/gpt-4-1/",
+    "codeUrl": "https://github.com/arcprize/model_baseline",
+    "dataUrl": null
+  },
+  {
+    "id": "gpt-4-1-mini-2025-04-14",
+    "displayName": "GPT-4.1-Mini",
+    "modelReleaseDate": "2025-04-14T00:00:00.000Z",
+    "providerId": "OpenAI",
+    "modelType": "Base LLM",
+    "modelGroup": "gpt-4.1",
+    "paperUrl": "https://openai.com/index/gpt-4-1/",
+    "codeUrl": "https://github.com/arcprize/model_baseline",
+    "dataUrl": null
+  },
+  {
+    "id": "gpt-4-1-2025-04-14",
+    "displayName": "GPT-4.1",
+    "modelReleaseDate": "2025-04-14T00:00:00.000Z",
+    "providerId": "OpenAI",
+    "modelType": "Base LLM",
+    "modelGroup": "gpt-4.1",
+    "paperUrl": "https://openai.com/index/gpt-4-1/",
+    "codeUrl": "https://github.com/arcprize/model_baseline",
+    "dataUrl": null
   }
 ]

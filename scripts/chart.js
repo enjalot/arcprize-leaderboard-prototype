@@ -21,7 +21,6 @@ function reusableScatterplot() {
   let labelCollisionDetection = true;
   let labelFontSize = "10px";
   let labelColor = "#dbdbdb";
-  let modelGroups = {}; // Model groups to draw lines between
   let annotation = { 
     enabled: true,
     rect: {
@@ -64,21 +63,11 @@ function reusableScatterplot() {
   let quadtree; // Quadtree for efficient hover detection
   let tooltipDiv; // Tooltip element
   let hoverTarget = null; // Store the currently hovered point ID
+  let currentColorMapping = {}; // Default empty object for custom color mappings
+  let currentColorMode = "provider"; // Default to "provider" mode
 
-  // --- Color Mapping (similar to leaderboard.js) ---
-  const providerColorMapping = {
-    "OpenAI": "#1e93ffff",
-    "Google": "#4ecc30ff",
-    "Anthropic": "#f93c32ff",
-    "Meta": "#e43ba2ff",
-    "ARC Prize 2024": "#ff841cff",
-    "Human": "#a9a9a9ff",
-    "Other": "#ffdc00ff",
-  };
-  const defaultColor = "#ffdc00ff"; // Color for unknown providers
   const highlightDimOpacity = 0.15;
   const highlightDimColor = "#555555";
-  const hoverRadiusIncrease = 3; // Increase radius on hover
   const hoverStrokeColor = "#ffffff"; // White stroke on hover
   const hoverStrokeWidth = 1.5;
   const hoverSearchRadius = 50; // Search radius for quadtree
@@ -87,6 +76,7 @@ function reusableScatterplot() {
   const triangleSymbol = d3.symbol().type(d3.symbolTriangle).size(70);
   const circleSymbol = d3.symbol().type(d3.symbolCircle).size(60);
 
+  const defaultColor = labelColor // "#ffdc00ff"; // Color for unknown values
 
   /**
    * The main chart function that processes the selection and data.
@@ -512,7 +502,7 @@ function reusableScatterplot() {
       .attr("dy", "0.35em")
       .attr("text-anchor", "start")
       .attr("font-size", labelFontSize)
-      .attr("fill", d => providerColorMapping[providerValue(d)] || labelColor)
+      
       .attr("data-id", d => idValue(d))
       .attr("opacity", 0) // Start transparent
       .style("pointer-events", "none")
@@ -524,6 +514,23 @@ function reusableScatterplot() {
       .transition("label-position").duration(duration) // Named transition
       .attr("x", d => targetLabels[idValue(d)].x)
       .attr("y", d => targetLabels[idValue(d)].y)
+      .attr("fill", d => {
+        // if (highlightSet && !highlightSet.has(idValue(d))) {
+        //   return highlightDimColor;
+        // }
+        
+        let colorKey;
+        if (currentColorMode === "provider") {
+          colorKey = providerValue(d);
+        } else if (currentColorMode === "version") {
+          colorKey = versionValue(d);
+        } else { // type or any other mode
+          colorKey = modelsById[d.modelId].modelType;
+        }
+        console.log("COLOR KEY", colorKey, currentColorMapping[colorKey])
+        
+        return currentColorMapping[colorKey] || labelColor;
+      })
       // .attr("opacity", 1); // Fade in/stay visible (collision might hide later)
 
 
@@ -688,9 +695,22 @@ function reusableScatterplot() {
            .transition("point-update").duration(duration)
            .attr("transform", d => `translate(${xScale(xValue(d))}, ${yScale(yValue(d))})`)
            .attr("opacity", d => (!highlightSet || highlightSet.has(idValue(d))) ? 1 : highlightDimOpacity)
-           .attr("fill", d => (!highlightSet || highlightSet.has(idValue(d)))
-               ? (providerColorMapping[providerValue(d)] || defaultColor)
-               : highlightDimColor)
+           .attr("fill", d => {
+             if (highlightSet && !highlightSet.has(idValue(d))) {
+               return highlightDimColor;
+             }
+             
+             let colorKey;
+             if (currentColorMode === "provider") {
+               colorKey = providerValue(d);
+             } else if (currentColorMode === "version") {
+               colorKey = versionValue(d);
+             } else { // type or any other mode
+               colorKey = modelsById[d.modelId].modelType;
+             }
+             
+             return currentColorMapping[colorKey] || defaultColor;
+           })
            .attr("stroke", d => (hoverTarget && idValue(d) === hoverTarget) ? hoverStrokeColor : "none") // Apply hover stroke
            .attr("stroke-width", d => (hoverTarget && idValue(d) === hoverTarget) ? hoverStrokeWidth : 0) // Apply hover stroke width
            .attr("d", d => { // Adjust symbol size on hover
@@ -726,7 +746,8 @@ function reusableScatterplot() {
     // If model groups config is empty, don't draw any lines
     if (Object.keys(modelGroups).length > 0) {
         // Process each data source in modelGroups
-        Object.keys(modelGroups).forEach(groupDataSource => { // Renamed 'group' to avoid conflict
+        Object.keys(modelGroups).forEach(groupDataSource => { 
+          // groupDataSource is the datasetId
           // Get model groups to connect for this data source
           const groupsToConnect = modelGroups[groupDataSource];
 
@@ -735,30 +756,29 @@ function reusableScatterplot() {
           // Process each specific model group name (e.g., "GPT-4")
           groupsToConnect.forEach(modelGroupName => {
              // Find the points using the full dataset
-             const version1Points = data.filter(d => modelGroupValue(d) === modelGroupName && versionValue(d) === 'v1_Semi_Private')
+             const versionPoints = data.filter(d => modelGroupValue(d) === modelGroupName && versionValue(d) === groupDataSource)
                                        .sort((a, b) => xValue(a) - xValue(b)); // Sort by cost
-             const version2Points = data.filter(d => modelGroupValue(d) === modelGroupName && versionValue(d) === 'v2_Semi_Private')
-                                       .sort((a, b) => xValue(a) - xValue(b));
 
             // Check if we have enough points for lines in each version
-            if (version1Points.length >= 2) {
-                 lineData.push({
-                     id: `${modelGroupName}-v1_Semi_Private`,
-                     points: version1Points,
-                     color: providerColorMapping[providerValue(version1Points[0])] || defaultColor,
-                     groupName: modelGroupName,
-                     version: 'v1_Semi_Private'
-                 });
+            if (versionPoints.length >= 2) {
+                let colorKey;
+                if (currentColorMode === "provider") {
+                    colorKey = providerValue(versionPoints[0]);
+                } else if (currentColorMode === "version") {
+                    colorKey = versionValue(versionPoints[0]);
+                } else { // type or any other mode
+                    colorKey = modelsById[versionPoints[0].modelId].modelType;
+                }
+                
+                lineData.push({
+                    id: `${modelGroupName}-${groupDataSource}`,
+                    points: versionPoints,
+                    color: currentColorMapping[colorKey] || defaultColor,
+                    groupName: modelGroupName,
+                    version: groupDataSource
+                });
             }
-             if (version2Points.length >= 2) {
-                 lineData.push({
-                     id: `${modelGroupName}-v2_Semi_Private`,
-                     points: version2Points,
-                     color: providerColorMapping[providerValue(version2Points[0])] || defaultColor,
-                     groupName: modelGroupName,
-                     version: 'v2_Semi_Private'
-                 });
-             }
+             
           });
         });
     }
@@ -769,6 +789,7 @@ function reusableScatterplot() {
       .y(d => yScale(yValue(d)))
       .curve(d3.curveCardinal.tension(0.5));
 
+    console.log("LINE DATA", lineData)
     // Data Join for lines
     const lines = selection.selectAll(".model-group-line")
       .data(lineData, d => d.id); // Use the generated ID
@@ -777,11 +798,11 @@ function reusableScatterplot() {
     lines.exit()
       .transition("line-exit").duration(duration / 2)
       .attr("opacity", 0)
-      .remove();
+      // .remove();
 
     // Enter: Add new lines, starting transparent
     const linesEnter = lines.enter().append("path")
-      .attr("class", d => `model-group-line group-${d.groupName.replace(/\s+/g, '-')}-${d.version}`) // Use groupName and version for class
+      .attr("class", d => `model-group-line`) 
       .attr("pointer-events", "none")
       .attr("d", d => line(d.points)) // Initial 'd' based on points
       .attr("fill", "none")
@@ -906,13 +927,13 @@ function reusableScatterplot() {
       let costDisplay = 'N/A';
       const costVal = xValue(d);
       if (costVal !== null && costVal !== undefined) {
-          if (costVal < 0.01) costDisplay = "$" + costVal.toExponential(1); // Exp for very small
+          if (costVal < 0.01) costDisplay = "$" + costVal.toFixed(4); // Exp for very small
           else if (costVal < 1) costDisplay = "$" + costVal.toFixed(3);
           else if (costVal < 1000) costDisplay = "$" + costVal.toFixed(2);
           else costDisplay = "$" + (costVal / 1000).toFixed(1) + "K";
       }
       tooltipDiv.html(`
-          ${d.Display_Name || d.Config || 'Unknown Model'}<br/>
+          ${labelValue(d)}<br/>
           Score: ${scoreDisplay}<br/>
           Cost/Task: ${costDisplay}<br/>
           Provider: ${providerValue(d)}
@@ -928,60 +949,6 @@ function reusableScatterplot() {
       tooltipDiv.transition().duration(200).style("opacity", 0);
   }
 
-  // --- Update Function for Y-Axis Domain ---
-  /**
-   * Updates the Y-axis domain and redraws the relevant chart elements with transitions.
-   * @param {Array<number>} newYDomain - A two-element array [min, max] for the new Y-axis domain.
-   * @param {number} [duration=750] - The duration for the transition in milliseconds.
-   */
-  chart.updateYAxis = function(newYDomain, duration = 750) {
-    if (!initialized) return; // Don't update if chart hasn't been drawn yet
-
-    yAxisMin = newYDomain[0];
-    yAxisMax = newYDomain[1];
-    y.domain([yAxisMin, yAxisMax]).nice(); // Update scale's domain
-
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-    // const data = svg.datum(); // Use fullData instead
-
-    // 1. Update Y Axis with transition
-    g.select(".y-axis")
-       .transition("y-axis-update").duration(duration)
-       .call(yAxis)
-       .call(g => g.selectAll("text").attr("fill", "#9a9a9a"))
-       .call(g => g.select(".domain").attr("stroke", "#555"));
-
-    // 2. Redraw Grid Lines (redraw instantly, positions handled by axes update)
-    drawGridLines(gridGroup, x, y, innerWidth, innerHeight);
-
-    // 3. Redraw Annotations, passing currentHighlightSet
-    drawMaxAnnotation(annotationsGroup, fullData, x, y, innerWidth, currentHighlightSet, duration);
-
-    // 4. Redraw Points with transition, respecting current highlight state
-    drawPoints(pointsGroup, fullData, x, y, duration, currentHighlightSet);
-
-    // 5. Redraw Labels with transition, respecting current highlight state
-    if (showLabels) {
-       drawLabels(labelsGroup, fullData, x, y, innerWidth, innerHeight, duration, currentHighlightSet);
-    } else {
-      labelsGroup.selectAll(".point-label")
-          .transition("label-hide").duration(duration / 2) // Fade out removed labels
-          .attr("opacity", 0)
-          .remove();
-    }
-
-    // 6. Redraw Model Group Lines with transition, respecting current highlight state
-     drawModelGroups(linesGroup, fullData, x, y, duration, currentHighlightSet);
-
-    // --- NEW: Update Quadtree ---
-    // Rebuild quadtree because scales changed
-    setupQuadtreeAndHover(svg, fullData, x, y, innerWidth, innerHeight);
-
-    return chart; // Allow chaining
-  };
-
-  // --- NEW: Highlight Points Function ---
   /**
    * Highlights a subset of data points, updating axes and dimming others.
    * @param {Array|null} highlightData - An array of data objects to highlight, or null/empty to reset.
@@ -1179,8 +1146,30 @@ function reusableScatterplot() {
 
   // --- NEW: Getter for Color Mapping ---
   chart.getColorMapping = function() {
-    // Return a copy to prevent external modification
-    return { ...providerColorMapping };
+    return { ...currentColorMapping };
+  };
+
+  chart.setColorMapping = function(colorMap, colorMode) {
+    console.log("SET COLOR MAPPING", colorMap, colorMode);
+    currentColorMapping = colorMap || {};
+    currentColorMode = colorMode || "provider";
+    
+    // If the chart is initialized, redraw with new colors
+    if (initialized) {
+        const innerWidth = width - margin.left - margin.right;
+        const innerHeight = height - margin.top - margin.bottom;
+        const duration = 750;
+        
+        // Redraw all elements that need color updates
+        drawPoints(pointsGroup, fullData, x, y, duration, currentHighlightSet);
+        drawModelGroups(linesGroup, fullData, x, y, duration, currentHighlightSet);
+        
+        if (showLabels) {
+            drawLabels(labelsGroup, fullData, x, y, innerWidth, innerHeight, duration, currentHighlightSet);
+        }
+    }
+    
+    return this;
   };
 
   // --- Configuration Getter/Setters ---
@@ -1293,10 +1282,6 @@ function reusableScatterplot() {
   //   return arguments.length ? (dataSourceValue = typeof _ === 'function' ? _ : () => _, chart) : dataSourceValue;
   // };
 
-  chart.modelGroups = function(_) {
-    return arguments.length ? (modelGroups = _, chart) : modelGroups;
-  };
-
   // --- Configuration Getter/Setters for Labels ---
   chart.showLabels = function(_) {
     if (!arguments.length) return showLabels;
@@ -1345,15 +1330,14 @@ function reusableScatterplot() {
     // Optionally redraw if enabled and initialized
     if (initialized) { // Redraw regardless of enabled state to handle removal
         const innerWidth = width - margin.left - margin.right;
-        const innerHeight = height - margin.top - margin.bottom; // Needed for scales
+        const innerHeight = height - margin.top - margin.bottom;
         // Redraw immediately (or with short duration) using the updated annotation state
         drawCustomAnnotation(annotationsGroup, x, y, 100);
     }
     return chart;
   };
 
-
-  // Add more getters/setters as needed for colors, symbols, etc.
+  
 
   return chart;
 }
