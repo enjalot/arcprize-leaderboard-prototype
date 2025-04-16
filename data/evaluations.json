@@ -1,0 +1,458 @@
+[
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "2025_human_panel",
+    "score": 0.98,
+    "costPerTask": 17,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "2025_human_panel",
+    "score": 1,
+    "costPerTask": 17,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "2025_human_panel",
+    "score": 1,
+    "costPerTask": 17,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Private_Eval",
+    "modelId": "2025_human_panel",
+    "score": 1,
+    "costPerTask": 17,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "ARChitects",
+    "score": 0.56,
+    "costPerTask": 0.2,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "ARChitects",
+    "score": 0.035,
+    "costPerTask": 0.2,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "ARChitects",
+    "score": 0.025,
+    "costPerTask": 0.2,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Private_Eval",
+    "modelId": "ARChitects",
+    "score": 0.031,
+    "costPerTask": 0.2,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "Claude 3.7",
+    "score": 0.136,
+    "costPerTask": 0.058,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "Claude 3.7 Thinking 16K",
+    "score": 0.286,
+    "costPerTask": 0.33,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "Claude 3.7 Thinking 16K",
+    "score": 0.008,
+    "costPerTask": 0.57,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Claude 3.7 Thinking 16K",
+    "score": 0.007,
+    "costPerTask": 0.51,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "Claude 3.7 Thinking 1K",
+    "score": 0.116,
+    "costPerTask": 0.07,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "Claude 3.7 Thinking 1K",
+    "score": 0.008,
+    "costPerTask": 0.14,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Claude 3.7 Thinking 1K",
+    "score": 0.004,
+    "costPerTask": 0.14,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "Claude 3.7 Thinking 8K",
+    "score": 0.212,
+    "costPerTask": 0.21,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Claude 3.7 Thinking 8K",
+    "score": 0.009,
+    "costPerTask": 0.36,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Gemini 1.5 Pro",
+    "score": 0.008,
+    "costPerTask": 0.04,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Gemini 2.0 Flash",
+    "score": 0.013,
+    "costPerTask": 0.004,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "gpt-4.5-preview-2025-02-27",
+    "score": 0.103,
+    "costPerTask": 0.29,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "gpt-4.5-preview-2025-02-27",
+    "score": 0.008,
+    "costPerTask": 2.1,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "gpt-4o-2024-11-20",
+    "score": 0.045,
+    "costPerTask": 0.05,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "Icecuber",
+    "score": 0.17,
+    "costPerTask": 0.2,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "Icecuber",
+    "score": 0.029,
+    "costPerTask": 0.13,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "Icecuber",
+    "score": 0.016,
+    "costPerTask": 0.13,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Private_Eval",
+    "modelId": "Icecuber",
+    "score": 0.004,
+    "costPerTask": 0.13,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "mturker",
+    "score": 0.77,
+    "costPerTask": 3,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o1 - high",
+    "score": 0.32,
+    "costPerTask": 3.8,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o1 - high",
+    "score": 0.03,
+    "costPerTask": 4.45,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o1 - low",
+    "score": 0.25,
+    "costPerTask": 1.5,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o1 - low",
+    "score": 0.008,
+    "costPerTask": 1.44,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o1 - medium",
+    "score": 0.31,
+    "costPerTask": 2.5,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o1 - medium",
+    "score": 0.013,
+    "costPerTask": 2.76,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o1-pro",
+    "score": 0.5,
+    "costPerTask": 39,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "o1-pro",
+    "score": 0.01,
+    "costPerTask": 39,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o1-pro",
+    "score": 0.01,
+    "costPerTask": 39,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o3-low",
+    "score": 0.757,
+    "costPerTask": 200,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o3-low",
+    "score": 0.04,
+    "costPerTask": 200,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o3-high",
+    "score": 0.875,
+    "costPerTask": 3474,
+    "resultsUrl": "",
+    "display": false
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o3-high",
+    "score": 0.15,
+    "costPerTask": 3474,
+    "resultsUrl": "",
+    "display": false
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o3-mini-high",
+    "score": 0.35,
+    "costPerTask": 0.19,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o3-mini-high",
+    "score": 0.015,
+    "costPerTask": 0.41,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o3-mini-medium",
+    "score": 0.291,
+    "costPerTask": 0.09,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "o3-mini-medium",
+    "score": 0.017,
+    "costPerTask": 0.28,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "o3-mini-low",
+    "score": 0.11,
+    "costPerTask": 0.04,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "R1",
+    "score": 0.158,
+    "costPerTask": 0.06,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "R1",
+    "score": 0.003,
+    "costPerTask": 0.08,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "R1",
+    "score": 0.013,
+    "costPerTask": 0.08,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "stem_grad",
+    "score": 0.98,
+    "costPerTask": 10,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "gemini-2.5-pro-exp-03-25",
+    "score": 0.125,
+    "costPerTask": "-",
+    "resultsUrl": "",
+    "display": false
+  },
+  {
+    "datasetId": "v1_Public_Eval",
+    "modelId": "gemini-2.5-pro-exp-03-25",
+    "score": 0.2425,
+    "costPerTask": "-",
+    "resultsUrl": "",
+    "display": false
+  },
+  {
+    "datasetId": "v2_Public_Eval",
+    "modelId": "gemini-2.5-pro-exp-03-25",
+    "score": 0.0083,
+    "costPerTask": "-",
+    "resultsUrl": "",
+    "display": false
+  },
+  {
+    "datasetId": "v2_Semi_Private",
+    "modelId": "gemini-2.5-pro-exp-03-25",
+    "score": 0.0125,
+    "costPerTask": "-",
+    "resultsUrl": "",
+    "display": false
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "Llama-4-Maverick-17B-128E-Instruct-FP8-together",
+    "score": 0.0438,
+    "costPerTask": 0.0078,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Public_Eval",
+    "modelId": "Llama-4-Maverick-17B-128E-Instruct-FP8-together",
+    "score": 0.0712,
+    "costPerTask": 0.0065,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Semi_Private",
+    "modelId": "Llama-4-Scout-17B-16E-Instruct-together",
+    "score": 0.005,
+    "costPerTask": 0.0041,
+    "resultsUrl": "",
+    "display": true
+  },
+  {
+    "datasetId": "v1_Public_Eval",
+    "modelId": "Llama-4-Scout-17B-16E-Instruct-together",
+    "score": 0.0238,
+    "costPerTask": 0.0036,
+    "resultsUrl": "",
+    "display": true
+  }
+]

@@ -148,7 +148,7 @@
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="scripts/data.js"></script>
 <script src="scripts/chart.js"></script>
-<script src="scripts/leaderboard.js"></script>
+<!-- <script src="scripts/leaderboard.js"></script> -->
 <script src="scripts/leaderboard-table.js"></script>
 <script>
   // Declare scatterplot in a broader scope
@@ -156,10 +156,10 @@
 
   document.addEventListener('DOMContentLoaded', async function() {
     const startTime = performance.now();
-    const csvLocation = 'data/leaderboard.csv';
-    const data = await loadData(csvLocation);
-    const filteredData = filterData(data);
-    const tidiedData = tidyData(filteredData);
+    // const csvLocation = 'data/leaderboard.csv';
+    // const data = await loadData(csvLocation);
+    // const filteredData = filterData(data);
+    const tidiedData = await loadAllData();
 
     // --- Instantiate the reusable chart ---
     scatterplot = reusableScatterplot()
@@ -178,10 +178,11 @@
       .datum(tidiedData)
       .call(scatterplot);
 
-    createLeaderboardTable('leaderboard-table', csvLocation, {
-      sortBy: 'performance',
-      sortDirection: 'desc'
-    });
+    // --- Create the leaderboard table ---
+    // createLeaderboardTable('leaderboard-table', csvLocation, {
+    //   sortBy: 'performance',
+    //   sortDirection: 'desc'
+    // });
 
     // --- Setup Filter State Management ---
     const filterState = {
@@ -194,11 +195,16 @@
       let filteredPoints = tidiedData;
       
       if (filterState.version !== "all") {
-        filteredPoints = filteredPoints.filter(d => d.version === filterState.version && d.Provider !== "Human");
+        filteredPoints = filteredPoints.filter(d => 
+          d.datasetId === filterState.version && 
+          providersById[modelsById[d.modelId].providerId].displayName !== "Human"
+        );
       }
       
       if (filterState.providers.length > 0) {
-        filteredPoints = filteredPoints.filter(d => filterState.providers.includes(d.Provider));
+        filteredPoints = filteredPoints.filter(d => 
+          filterState.providers.includes(providersById[modelsById[d.modelId].providerId].displayName)
+        );
       }
       
       scatterplot.highlightPoints(filteredPoints, 750);
@@ -208,7 +214,7 @@
     const colorMapping = scatterplot.getColorMapping();
     const defaultFilterColor = "#ffdc00ff";
     
-    // Version filter data
+    // Version filter data - use dataset IDs from the data structure
     const versionFilters = [
       {
         id: "all-version-filter",
@@ -231,7 +237,7 @@
       {
         id: "arc-agi-1-filter",
         text: "ARC-AGI-1",
-        version: "ARC-AGI-1",
+        version: "v1_Semi_Private",
         icon: (svg) => {
           svg.append("circle")
             .attr("cx", 10)
@@ -243,7 +249,7 @@
       {
         id: "arc-agi-2-filter",
         text: "ARC-AGI-2",
-        version: "ARC-AGI-2",
+        version: "v2_Semi_Private",
         icon: (svg) => {
           svg.append("polygon")
             .attr("points", "10,2 18,18 2,18")
@@ -289,7 +295,11 @@
     d3.select("#all-version-filter").classed("filter-active", true);
 
     // --- Provider Filters ---
-    const uniqueProviders = [...new Set(tidiedData.map(d => d.Provider).filter(p => p !== "Human"))];
+    // Extract unique providers from the models data rather than directly from data points
+    const uniqueProviders = [...new Set(
+      tidiedData.map(d => providersById[modelsById[d.modelId].providerId].displayName)
+        .filter(name => name !== "Human")
+    )];
     
     // Create provider filter data
     const providerFilters = uniqueProviders.sort().map(provider => ({

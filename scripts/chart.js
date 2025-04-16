@@ -18,7 +18,6 @@ function reusableScatterplot() {
   let yAxisMax = 100; // Initial Y-axis max
   let showLabels = true;
   let labelPadding = 8; // Pixels between point and label
-  let labelValue = d => d.Display_Name || d.Config || 'Unknown Model';
   let labelCollisionDetection = true;
   let labelFontSize = "10px";
   let labelColor = "#dbdbdb";
@@ -47,12 +46,13 @@ function reusableScatterplot() {
 
   // --- Accessor Functions ---
   // These functions define how to get the necessary data properties from each datum
-  let xValue = d => d.cost;
-  let yValue = d => d.score;
-  let idValue = d => `${d.Config}-${d.version}`; // Unique identifier for points
-  let versionValue = d => d.version;
-  let providerValue = d => d.Provider; // For color mapping
-  let modelGroupValue = d => d.Model_Group; // For connecting points within same group
+  let xValue = d => d.costPerTask;
+  let yValue = d => d.score * 100;
+  let idValue = d => `${d.modelId}-${d.datasetId}`; // Unique identifier for points
+  let versionValue = d => d.datasetId;
+  let providerValue = d => providersById[modelsById[d.modelId].providerId].displayName; // For color mapping
+  let modelGroupValue = d => modelsById[d.modelId].modelGroup; // For connecting points within same group
+  let labelValue = d => modelsById[d.modelId].displayName
 
   // --- Internal Variables ---
   let svg, g, x, y, xAxis, yAxis, pointsGroup, gridGroup, labelsGroup, linesGroup, annotationsGroup; // D3 selections and scales
@@ -675,10 +675,12 @@ function reusableScatterplot() {
           .remove();
 
       const pointsEnter = points.enter().append("path")
-          .attr("class", d => `point point-${versionValue(d)} provider-${providerValue(d).replace(/\s+/g, '-').toLowerCase()}`)
+          .attr("class", d => {
+            return `point point-${versionValue(d)} provider-${providerValue(d).replace(/\s+/g, '-').toLowerCase()}`
+            })
           .attr("pointer-events", "none")
           .attr("data-id", d => idValue(d)) // Add data-id here
-          .attr("d", d => versionValue(d) === 'ARC-AGI-1' ? circleSymbol() : triangleSymbol())
+          .attr("d", d => versionValue(d).indexOf('v1') === 0 ? circleSymbol() : triangleSymbol())
           .attr("transform", d => `translate(${xScale(xValue(d))}, ${yScale(yValue(d))})`)
           .attr("opacity", 0);
 
@@ -692,9 +694,9 @@ function reusableScatterplot() {
            .attr("stroke", d => (hoverTarget && idValue(d) === hoverTarget) ? hoverStrokeColor : "none") // Apply hover stroke
            .attr("stroke-width", d => (hoverTarget && idValue(d) === hoverTarget) ? hoverStrokeWidth : 0) // Apply hover stroke width
            .attr("d", d => { // Adjust symbol size on hover
-               const baseSymbol = versionValue(d) === 'ARC-AGI-1' ? circleSymbol : triangleSymbol;
+               const baseSymbol = versionValue(d).indexOf('v1') === 0 ? circleSymbol : triangleSymbol;
                if (hoverTarget && idValue(d) === hoverTarget) {
-                   const hoverSize = (versionValue(d) === 'ARC-AGI-1' ? circleSymbol.size()() : triangleSymbol.size()()) * 1.5; // Increase size
+                   const hoverSize = (versionValue(d).indexOf('v1') === 0 ? circleSymbol.size()() : triangleSymbol.size()()) * 1.5; // Increase size
                    return baseSymbol.size(hoverSize)();
                }
                return baseSymbol(); // Use original size
@@ -733,28 +735,28 @@ function reusableScatterplot() {
           // Process each specific model group name (e.g., "GPT-4")
           groupsToConnect.forEach(modelGroupName => {
              // Find the points using the full dataset
-             const version1Points = data.filter(d => modelGroupValue(d) === modelGroupName && versionValue(d) === 'ARC-AGI-1')
+             const version1Points = data.filter(d => modelGroupValue(d) === modelGroupName && versionValue(d) === 'v1_Semi_Private')
                                        .sort((a, b) => xValue(a) - xValue(b)); // Sort by cost
-             const version2Points = data.filter(d => modelGroupValue(d) === modelGroupName && versionValue(d) === 'ARC-AGI-2')
+             const version2Points = data.filter(d => modelGroupValue(d) === modelGroupName && versionValue(d) === 'v2_Semi_Private')
                                        .sort((a, b) => xValue(a) - xValue(b));
 
             // Check if we have enough points for lines in each version
             if (version1Points.length >= 2) {
                  lineData.push({
-                     id: `${modelGroupName}-ARC-AGI-1`,
+                     id: `${modelGroupName}-v1_Semi_Private`,
                      points: version1Points,
                      color: providerColorMapping[providerValue(version1Points[0])] || defaultColor,
                      groupName: modelGroupName,
-                     version: 'ARC-AGI-1'
+                     version: 'v1_Semi_Private'
                  });
             }
              if (version2Points.length >= 2) {
                  lineData.push({
-                     id: `${modelGroupName}-ARC-AGI-2`,
+                     id: `${modelGroupName}-v2_Semi_Private`,
                      points: version2Points,
                      color: providerColorMapping[providerValue(version2Points[0])] || defaultColor,
                      groupName: modelGroupName,
-                     version: 'ARC-AGI-2'
+                     version: 'v2_Semi_Private'
                  });
              }
           });
@@ -880,8 +882,8 @@ function reusableScatterplot() {
           .attr("stroke", isHovered ? hoverStrokeColor : "none")
           .attr("stroke-width", isHovered ? hoverStrokeWidth : 0)
           .attr("d", function(d) {
-              const baseSymbol = versionValue(d) === 'ARC-AGI-1' ? circleSymbol : triangleSymbol;
-              const originalSize = (versionValue(d) === 'ARC-AGI-1' ? 60 : 70); // Assuming these were the original sizes
+              const baseSymbol = versionValue(d).indexOf('v1') === 0 ? circleSymbol : triangleSymbol;
+              const originalSize = (versionValue(d).indexOf('v1') === 0 ? 60 : 70); // Assuming these were the original sizes
               if (isHovered) {
                   return baseSymbol.size(originalSize * 1.5)(); // Use size() method
               } else {
@@ -1318,10 +1320,6 @@ function reusableScatterplot() {
       }
     }
     return chart;
-  };
-
-  chart.labelValue = function(_) {
-    return arguments.length ? (labelValue = typeof _ === 'function' ? _ : () => _, chart) : labelValue;
   };
 
   chart.labelCollisionDetection = function(_) {

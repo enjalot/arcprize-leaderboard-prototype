@@ -1,0 +1,32 @@
+[
+  {
+    "id": "v1_Semi_Private",
+    "displayName": "ARC-AGI-1",
+    "url": ""
+  },
+  {
+    "id": "v1_Public_Eval",
+    "displayName": "ARC-AGI-1 Public",
+    "url": ""
+  },
+  {
+    "id": "v1_Private_Eval",
+    "displayName": "ARC-AGI-1 Private",
+    "url": ""
+  },
+  {
+    "id": "v2_Public_Eval",
+    "displayName": "ARC-AGI-2 Public",
+    "url": ""
+  },
+  {
+    "id": "v2_Semi_Private",
+    "displayName": "ARC-AGI-2",
+    "url": ""
+  },
+  {
+    "id": "v2_Private_Eval",
+    "displayName": "ARC-AGI-2 Private",
+    "url": ""
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "Human",
+    "displayName": "Human",
+    "url": "",
+    "color": "#a9a9a9ff"
+  },
+  {
+    "id": "ARC Prize 2024",
+    "displayName": "ARC Prize 2024",
+    "url": "",
+    "color": "#ff841cff"
+  },
+  {
+    "id": "Anthropic",
+    "displayName": "Anthropic",
+    "url": "",
+    "color": "#f93c32ff"
+  },
+  {
+    "id": "Google",
+    "displayName": "Google",
+    "url": "",
+    "color": "#4ecc30ff"
+  },
+  {
+    "id": "OpenAI",
+    "displayName": "OpenAI",
+    "url": "",
+    "color": "#1e93ffff"
+  },
+  {
+    "id": "Meta",
+    "displayName": "Meta",
+    "url": "",
+    "color": "#e43ba2ff"
+  },
+  {
+    "id": "Deepseek",
+    "displayName": "Deepseek",
+    "url": "",
+    "color": "#ffdc00ff"
+  },
+  {
+    "id": "xAI",
+    "displayName": "xAI",
+    "url": "",
+    "color": "#ffdc00ff"
+  }
+]
