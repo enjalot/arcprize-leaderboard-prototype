@@ -1032,7 +1032,9 @@ function reusableScatterplot() {
 
           // TODO: Do we want to update the X domain? Uncomment to do it, but it seems dissorienting.
           // targetXDomain = [minX, maxX];
-          targetYDomain = [minY, maxY];
+          // targetYDomain = [minY, maxY];
+          // lock the minY to 0
+          targetYDomain = [originalYDomain[0], maxY];
       }
 
       // Update the global highlight set *before* drawing
@@ -1042,7 +1044,7 @@ function reusableScatterplot() {
       // x.domain(targetXDomain).nice();
       y.domain(targetYDomain).nice();
       // console.log("targetXDomain", targetXDomain);
-      console.log("targetYDomain", targetYDomain);
+      console.log("targetYDomain???", targetYDomain);
 
       // Update Axes with transition
       g.select(".x-axis")

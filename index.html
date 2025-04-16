@@ -1,5 +1,67 @@
 <head>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .filter-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 15px;
+      padding-bottom: 6px;
+    }
+    
+    .filter-item {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+    
+    .filter-icon {
+      margin-right: 4px;
+    }
+    
+    .filter-label {
+      font-size: 0.85em;
+    }
+    
+    .filter-section-title {
+      text-align: left;
+      margin-bottom: 8px;
+      font-size: 0.8em;
+      color: #707070;
+    }
+    
+    .filters-wrapper {
+      display: flex;
+      margin-top: 20px;
+      justify-content: center;
+      gap: 15px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .filters-column {
+      flex: 1;
+    }
+    
+    .filter-info {
+      margin-bottom: 10px;
+      font-size: 0.8em;
+      color: #707070;
+    }
+    
+    .filter-active {
+      border-bottom: 2px solid #9a9a9a;
+      padding: 2px;
+      font-weight: bold;
+    }
+    
+    .provider-active {
+      font-weight: bold;
+      border-bottom: 2px solid #9a9a9a;
+    }
+  </style>
 </head>
 <div class="container">
   <div class="item">
@@ -8,43 +70,18 @@
     <div id="leaderboard-chart"></div>
     <div id="reusable-scatterplot-container"></div>
     
-    <div style="display: flex; margin-top: 20px; justify-content: center; gap: 15px; max-width: 800px; margin-left: auto; margin-right: auto;">
-      <div style="flex: 1;">
-        <div style="text-align: left; margin-bottom: 8px; font-size: 0.8em; color: #707070;">Click to highlight</div>
+    <div class="filters-wrapper">
+      <div class="filters-column">
+        <div class="filter-section-title">Click to highlight</div>
         <!-- Prize Filter-->
-        <div id="prize-filter" style="display: flex; flex-wrap: wrap; gap: 10px 15px;">
-          <div id="all-version-filter" style="display: flex; align-items: center; white-space: nowrap; margin-bottom: 5px; cursor: pointer;">
-            <svg width="20" height="20">
-              <circle cx="10" cy="10" r="8" stroke="#808080" fill="none"></circle>
-              <polygon points="10,2 18,18 2,18" stroke="#808080" fill="none"></polygon>
-            </svg>
-            <span style="margin-left: 10px; font-size: 0.85em;">All</span>
-          </div>
-          <div id="arc-agi-1-filter" style="display: flex; align-items: center; white-space: nowrap; margin-bottom: 5px; cursor: pointer;">
-            <svg width="20" height="20">
-              <circle cx="10" cy="10" r="8" fill="#808080"></circle>
-            </svg>
-            <span style="margin-left: 10px; font-size: 0.85em;">ARC-AGI-1</span>
-          </div>
-
-          <div id="arc-agi-2-filter" style="display: flex; align-items: center; white-space: nowrap; margin-bottom: 5px; cursor: pointer;">
-            <svg width="20" height="20">
-              <polygon points="10,2 18,18 2,18" fill="#808080"></polygon>
-            </svg>
-            <span style="margin-left: 10px; font-size: 0.85em;">ARC-AGI-2</span>
-          </div>
-        </div>
+        <div id="prize-filter" class="filter-container"></div>
         <!-- Provider Filter -->
-        <div id="provider-filter" style="display: flex; flex-wrap: wrap; gap: 10px 15px;">
-          
-        </div>
+        <div id="provider-filter" class="filter-container"></div>
         <!-- Type Filter -->
-        <div id="type-filter" style="display: flex; flex-wrap: wrap; gap: 10px 15px;">
-        </div>
-
+        <div id="type-filter" class="filter-container"></div>
       </div>
-      <div style="flex: 1;">
-        <div style="margin-bottom: 10px; font-size: 0.8em; color: #707070;">Only systems which required less than $10,000 to run are shown. Notably missing from this chart is o3 (high compute). For more information on this see our <a style="color: #707070;" href="/blog/oai-o3-pub-breakthrough">announcement blog post</a>.</div>
+      <div class="filters-column">
+        <div class="filter-info">Only systems which required less than $10,000 to run are shown. Notably missing from this chart is o3 (high compute). For more information on this see our <a style="color: #707070;" href="/blog/oai-o3-pub-breakthrough">announcement blog post</a>.</div>
       </div>
     </div>
   </div>
@@ -118,118 +155,196 @@
   let scatterplot;
 
   document.addEventListener('DOMContentLoaded', async function() {
-    //track how long it takes to load the data
     const startTime = performance.now();
-    // temporary for github pages
     const csvLocation = 'data/leaderboard.csv';
     const data = await loadData(csvLocation);
-    console.log("DATA", data);
     const filteredData = filterData(data);
-    console.log("FILTERED DATA", filteredData);
     const tidiedData = tidyData(filteredData);
-    console.log("TIDIED DATA", tidiedData);
 
     // --- Instantiate the reusable chart ---
     scatterplot = reusableScatterplot()
       .modelGroups({
         "v1_Semi_Private": ["o3", "Claude_3_7_thinking", "o3-mini", "o1"]
       })
-      .width(980) // Optional: Configure width
-      .height(500) // Optional: Configure height
-      .xAxisMin(0.001) // Adjust X axis min if needed
-      .xAxisMax(1000)  // Adjust X axis max if needed (maybe less than 1000 for this example?)
-      .yAxisMin(0)    // Initial Y min
-      .yAxisMax(100) // Initial Y max
+      .width(980)
+      .height(500)
+      .xAxisMin(0.001)
+      .xAxisMax(1000)
+      .yAxisMin(0)
+      .yAxisMax(100)
 
     // --- Select the container and call the chart function ---
-    const chartContainer = d3.select('#reusable-scatterplot-container');
-
-    // Initial render
-    chartContainer
-      .datum(tidiedData) // Pass the data using datum (or data if you expect multiple charts)
-      .call(scatterplot); // Call the chart function
-
-
-    // // Create the chart
-    // createLeaderboardChart('leaderboard-chart', csvLocation, {
-    //   // You can customize options here if needed
-    //   title: "ARC-AGI-2  Leaderboard"
-    // });
+    d3.select('#reusable-scatterplot-container')
+      .datum(tidiedData)
+      .call(scatterplot);
 
     createLeaderboardTable('leaderboard-table', csvLocation, {
       sortBy: 'performance',
       sortDirection: 'desc'
     });
 
-    // --- Setup Filters ---
-    const colorMapping = scatterplot.getColorMapping(); // Get colors from chart
-    const defaultFilterColor = "#ffdc00ff"; // Match defaultColor in chart.js
+    // --- Setup Filter State Management ---
+    const filterState = {
+      version: "all",
+      providers: []
+    };
 
-    // Version Filters (existing)
-    document.getElementById('all-version-filter').addEventListener('click', () => {
-      if (scatterplot) {
-        scatterplot.highlightPoints(tidiedData, 750);
+    // Function to apply filters based on current state
+    function applyFilters() {
+      let filteredPoints = tidiedData;
+      
+      if (filterState.version !== "all") {
+        filteredPoints = filteredPoints.filter(d => d.version === filterState.version && d.Provider !== "Human");
       }
-    });
-
-    document.getElementById('arc-agi-1-filter').addEventListener('click', () => {
-      if (scatterplot) {
-        scatterplot.highlightPoints(tidiedData.filter(d => d.version == "ARC-AGI-1" && d.Provider !== "Human"), 750);
+      
+      if (filterState.providers.length > 0) {
+        filteredPoints = filteredPoints.filter(d => filterState.providers.includes(d.Provider));
       }
-    });
+      
+      scatterplot.highlightPoints(filteredPoints, 750);
+    }
 
-    document.getElementById('arc-agi-2-filter').addEventListener('click', () => {
-      if (scatterplot) {
-        scatterplot.highlightPoints(tidiedData.filter(d => d.version == "ARC-AGI-2" && d.Provider !== "Human"), 750);
+    // --- Setup Version Filters ---
+    const colorMapping = scatterplot.getColorMapping();
+    const defaultFilterColor = "#ffdc00ff";
+    
+    // Version filter data
+    const versionFilters = [
+      {
+        id: "all-version-filter",
+        text: "All",
+        version: "all",
+        icon: (svg) => {
+          svg.append("circle")
+            .attr("cx", 10)
+            .attr("cy", 10)
+            .attr("r", 8)
+            .attr("stroke", "#808080")
+            .attr("fill", "none");
+          
+          svg.append("polygon")
+            .attr("points", "10,2 18,18 2,18")
+            .attr("stroke", "#808080")
+            .attr("fill", "none");
+        }
+      },
+      {
+        id: "arc-agi-1-filter",
+        text: "ARC-AGI-1",
+        version: "ARC-AGI-1",
+        icon: (svg) => {
+          svg.append("circle")
+            .attr("cx", 10)
+            .attr("cy", 10)
+            .attr("r", 8)
+            .attr("fill", "#808080");
+        }
+      },
+      {
+        id: "arc-agi-2-filter",
+        text: "ARC-AGI-2",
+        version: "ARC-AGI-2",
+        icon: (svg) => {
+          svg.append("polygon")
+            .attr("points", "10,2 18,18 2,18")
+            .attr("fill", "#808080");
+        }
       }
-    });
-
-    // Provider Filters (New)
-    const providerFilterContainer = document.getElementById('provider-filter');
-    const uniqueProviders = [...new Set(tidiedData.map(d => d.Provider).filter(p => p !== "Human"))]; // Exclude Human for filtering
-
-    uniqueProviders.sort().forEach(provider => {
-        const providerDiv = document.createElement('div');
-        providerDiv.style.display = 'flex';
-        providerDiv.style.alignItems = 'center';
-        providerDiv.style.whiteSpace = 'nowrap';
-        providerDiv.style.marginBottom = '5px';
-        providerDiv.style.cursor = 'pointer';
-
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.setAttribute("width", "20");
-        svg.setAttribute("height", "20");
-
-        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        rect.setAttribute("x", "2"); // Small padding
-        rect.setAttribute("y", "2");
-        rect.setAttribute("width", "16"); // Make it slightly smaller than svg
-        rect.setAttribute("height", "16");
-        rect.setAttribute("rx", "3"); // Rounded corners
-        rect.setAttribute("fill", colorMapping[provider] || defaultFilterColor); // Use provider color
-
-        svg.appendChild(rect);
-
-        const span = document.createElement('span');
-        span.style.marginLeft = '10px';
-        span.style.fontSize = '0.85em';
-        span.textContent = provider;
-
-        providerDiv.appendChild(svg);
-        providerDiv.appendChild(span);
-
-        providerDiv.addEventListener('click', () => {
-            if (scatterplot) {
-                const providerData = tidiedData.filter(d => d.Provider === provider);
-                scatterplot.highlightPoints(providerData, 750);
-            }
+    ];
+    
+    // Create version filters using D3
+    const prizeFilter = d3.select("#prize-filter")
+      .selectAll("div")
+      .data(versionFilters)
+      .enter()
+      .append("div")
+        .attr("id", d => d.id)
+        .attr("class", "filter-item")
+        .classed("filter-active", d => d.version === filterState.version)
+        .on("click", (event, d) => {
+          // Update UI
+          d3.selectAll("#prize-filter div").classed("filter-active", false);
+          d3.select(`#${d.id}`).classed("filter-active", true);
+          
+          // Update state and apply
+          filterState.version = d.version;
+          applyFilters();
         });
+    
+    // Add SVG icons
+    prizeFilter.append("svg")
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("class", "filter-icon")
+      .each(function(d) {
+        d.icon(d3.select(this));
+      });
+    
+    // Add text labels
+    prizeFilter.append("span")
+      .attr("class", "filter-label")
+      .text(d => d.text);
+    
+    // Set the default active filter (All)
+    d3.select("#all-version-filter").classed("filter-active", true);
 
-        providerFilterContainer.appendChild(providerDiv);
-    });
+    // --- Provider Filters ---
+    const uniqueProviders = [...new Set(tidiedData.map(d => d.Provider).filter(p => p !== "Human"))];
+    
+    // Create provider filter data
+    const providerFilters = uniqueProviders.sort().map(provider => ({
+      id: `provider-filter-${provider.replace(/\s+/g, '-').toLowerCase()}`,
+      provider: provider,
+      color: colorMapping[provider] || defaultFilterColor
+    }));
+    
+    // Create provider filters using D3
+    const providerFilterItems = d3.select("#provider-filter")
+      .selectAll("div")
+      .data(providerFilters)
+      .enter()
+      .append("div")
+        .attr("id", d => d.id)
+        .attr("class", "filter-item")
+        .attr("data-provider", d => d.provider)
+        .on("click", function(event, d) {
+          const isSelected = filterState.providers.includes(d.provider);
+          
+          if (isSelected) {
+            // Remove from filter
+            filterState.providers = filterState.providers.filter(p => p !== d.provider);
+            d3.select(this).classed("provider-active", false);
+          } else {
+            // Add to filter
+            filterState.providers.push(d.provider);
+            d3.select(this).classed("provider-active", true);
+          }
+          
+          applyFilters();
+        });
+    
+    // Add SVG icons for providers
+    providerFilterItems.append("svg")
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("class", "filter-icon")
+      .each(function(d) {
+        d3.select(this)
+          .append("rect")
+            .attr("x", 2)
+            .attr("y", 2)
+            .attr("width", 16)
+            .attr("height", 16)
+            .attr("rx", 3)
+            .attr("fill", d.color);
+      });
+    
+    // Add text labels
+    providerFilterItems.append("span")
+      .attr("class", "filter-label")
+      .text(d => d.provider);
 
     const endTime = performance.now();
     const loadTime = endTime - startTime;
-    //console.log(`Data loaded in ${loadTime.toFixed(2)} milliseconds`);
   });
 </script>
